@@ -1,4 +1,4 @@
-# Legacy Server Incident Response — Simulated SOC Investigation
+# SOC Incident Response Capstone — Legacy Server Breach Investigation
 
 A hands-on incident response case study: identifying, containing, and permanently
 remediating multiple root-level backdoors on an intentionally vulnerable, unpatched
