@@ -95,7 +95,7 @@ volatile forensic evidence capture · VirtualBox lab network design · AI-assist
 
 ## Disclaimer
 
-This project was performed entirely inside an isolated VirtualBox lab network
+This project was performed entirely inside an isolated VM Oracle Box lab network
 against intentionally vulnerable training targets, for educational purposes as
 part of a cybersecurity certificate program. No commands, scripts, or techniques
 in this repository were run against, or are intended for use against, any system
