@@ -64,7 +64,7 @@ for a clean read before every scan, then restored immediately after:
 | 1099 — Java RMI | open | **closed** |
 | 3632 — distccd | open | **closed** |
 | 6667 — UnrealIRCd | open | **closed** |
-| 6697 — UnrealIRCd-SSL | open | **closed** |
+| 5900 — VNC | open | **closed** |
 | 8787 — Ruby DRb | open | **closed** |
 
 `closed` here means the service is genuinely gone — TCP RST, nothing
@@ -72,30 +72,49 @@ listening — not just hidden behind the firewall.
 
 ## Automated health check
 
-A custom Bash script ([`scripts/healthcheck.sh`](../scripts/healthcheck.sh)),
-built and debugged with Claude, sweeps all 7 previously-exploited ports using
-Bash's `/dev/tcp` pseudo-device and reports `SECURE` only if every one is
-closed — so a regression gets caught immediately instead of at the next
-scheduled scan.
+A pure-Bash script ([`scripts/healthcheck.sh`](../scripts/healthcheck.sh)) —
+the team-standard Task 10 check, adapted from a version written by teammate
+Parker Collins and independently verified in each member's own lab — sweeps
+the 7 remediated ports plus SSH using Bash's `/dev/tcp` pseudo-device. It
+reports three states per port (`OPEN` / `CLOSED` / `FILTERED`), not just a
+pass/fail, so it can tell a genuinely-removed service apart from one that's
+just hidden behind the firewall — the exact distinction the Phase 3
+verification mistake was about. The SSH check guards against a false
+"SECURE" reading if the host itself is simply down. Result is `SECURE` only
+if all 7 remediated ports are non-open **and** SSH responds.
 
 ```
 $ ./healthcheck.sh
-=== Tech Solutions Inc. - legacyserver Health Check ===
-[OK] Port 21 (vsftpd backdoor) closed
-[OK] Port 1524 (Ingreslock bindshell) closed
-[OK] Port 1099 (Java RMI) closed
-[OK] Port 3632 (distccd) closed
-[OK] Port 6667 (UnrealIRCd) closed
-[OK] Port 6697 (UnrealIRCd-SSL) closed
-[OK] Port 8787 (Ruby DRb) closed
-
-RESULT: SECURE
+Health check: 192.168.2.3 (timeout 2s per port)
+------------------------------------------------------
+21    FTP (vsftpd)             CLOSED    PASS
+1099  Java RMI registry        CLOSED    PASS
+1524  Ingreslock bind shell    CLOSED    PASS
+3632  distccd                  CLOSED    PASS
+5900  VNC                      CLOSED    PASS
+6667  IRC (UnrealIRCd)         CLOSED    PASS
+8787  Ruby DRb                 CLOSED    PASS
+22    SSH (must stay open)     OPEN      PASS
+------------------------------------------------------
+SECURE
 ```
 
+As with the scan table above, run this with `ufw` disabled for a clean read
+— otherwise a port that's still there but firewall-blocked will read
+`FILTERED` instead of the firewall's true state.
+
+**The script caught a real regression during testing.** A run against the
+lab VM turned up port 5900 (VNC) unexpectedly `OPEN`/`FAIL` — a live
+`Xtightvnc` process had respawned since the original rc.local fix. `sudo ss
+-tulpn` identified the PID, `sudo kill -9` on it plus confirming the
+rc.local lines were still commented out resolved it; a clean re-run
+confirmed `SECURE`. This is the health check doing exactly its job —
+catching drift before it shipped as "verified."
+
 See [`docs/05-lessons-learned.md`](05-lessons-learned.md) for the real
-debugging story behind getting this script working (a genuine zsh-vs-bash
-environment mismatch), told as a prompt-engineering lesson rather than
-polished away.
+debugging story behind the earlier draft of this script (a genuine
+zsh-vs-bash environment mismatch), told as a prompt-engineering lesson
+rather than polished away.
 
 ## Evidence
 
