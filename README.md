@@ -93,6 +93,18 @@ verification · Linux service management (`xinetd`, `inetd.conf`, `rc.local`,
 volatile forensic evidence capture · VirtualBox lab network design · AI-assisted
 ("trust but verify") investigation workflow with Claude.
 
+## Final deliverables
+
+Project complete. The full team-submitted technical report (all 5 members,
+Phases 1-5) and the non-technical executive presentation are included here for
+portfolio reference:
+
+- [`deliverables/CAP195_Technical_Report_FINAL.pdf`](deliverables/CAP195_Technical_Report_FINAL.pdf) / [`.docx`](deliverables/CAP195_Technical_Report_FINAL.docx) — full team technical report
+- [`deliverables/CAP195_Executive_Presentation_FINAL.pptx`](deliverables/CAP195_Executive_Presentation_FINAL.pptx) — non-technical executive briefing deck
+
+My own individual write-up per phase, with my own evidence, stays in
+[`docs/`](docs/) as described below.
+
 ## Disclaimer
 
 This project was performed entirely inside an isolated VM Oracle Box lab network
