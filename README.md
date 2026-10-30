@@ -1,6 +1,8 @@
 # SOC Incident Response Capstone — Legacy Server Breach Investigation
 
-A hands-on incident response case study: identifying, containing, and permanently
+[Portfolio index](https://github.com/IAM-ZeroTrustRon/GRC-IAM-Portfolio) · **Repository role:** Isolated training-lab incident response.
+
+A hands-on incident response case study: identifying, containing, and
 remediating multiple root-level backdoors on an intentionally vulnerable, unpatched
 legacy Ubuntu server, using an AI tool (Claude) as an interactive "virtual analyst"
 throughout — with every AI-suggested finding manually verified against the live
